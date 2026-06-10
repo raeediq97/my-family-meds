@@ -13,51 +13,25 @@
             --text-color: #2d3748;
             --danger-color: #e53e3e;
             --warning-color: #dd6b20;
+            --success-color: #38a169;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            color: var(--primary-color);
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            color: #718096;
-            font-size: 1rem;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { color: var(--primary-color); font-size: 2rem; margin-bottom: 10px; }
+        header p { color: #718096; font-size: 1rem; }
 
         .search-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
             background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .search-box {
@@ -67,33 +41,22 @@
             border-radius: 8px;
             font-size: 1.1rem;
             outline: none;
-            transition: border-color 0.3s;
         }
 
-        .search-box:focus {
-            border-color: var(--primary-color);
-        }
+        .search-box:focus { border-color: var(--primary-color); }
 
-        .filter-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
+        .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; padding: 5px 0; }
         .tag {
             background: #edf2f7;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             border: none;
             transition: all 0.2s;
+            font-weight: 500;
         }
-
-        .tag.active, .tag:hover {
-            background: var(--primary-color);
-            color: white;
-        }
+        .tag.active, .tag:hover { background: var(--primary-color); color: white; }
 
         .medicines-grid {
             display: grid;
@@ -111,75 +74,25 @@
             flex-direction: column;
         }
 
-        .med-img-box {
-            width: 100%;
-            height: 180px;
-            background: #edf2f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .med-img-box { width: 100%; height: 150px; background: #edf2f7; display: flex; align-items: center; justify-content: center; }
+        .med-img { width: 100%; height: 100%; object-fit: cover; }
+        .med-emoji { font-size: 3.5rem; }
 
-        .med-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .med-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .med-name { font-size: 1.25rem; color: var(--primary-color); font-weight: bold; }
+        .med-badge { display: inline-block; align-self: flex-start; background: #e6fffa; color: var(--secondary-color); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; }
+        
+        .med-details { font-size: 0.95rem; color: #4a5568; line-height: 1.5; }
+        .count-section { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
+        .count-input { width: 90px; padding: 4px 8px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; }
+        .btn-update-count { background: var(--secondary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-        .med-emoji {
-            font-size: 4rem;
-        }
-
-        .med-info {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex-grow: 1;
-        }
-
-        .med-name {
-            font-size: 1.25rem;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .med-badge {
-            display: inline-block;
-            align-self: flex-start;
-            background: #e6fffa;
-            color: var(--secondary-color);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .med-details {
-            font-size: 0.95rem;
-            color: #4a5568;
-            line-height: 1.5;
-        }
-
-        .med-expiry {
-            margin-top: auto;
-            padding-top: 10px;
-            border-top: 1px solid #edf2f7;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .status-valid { color: #38a169; }
+        .med-expiry { margin-top: auto; padding-top: 10px; border-top: 1px solid #edf2f7; font-size: 0.9rem; font-weight: bold; }
+        .status-valid { color: var(--success-color); }
         .status-warning { color: var(--warning-color); }
         .status-expired { color: var(--danger-color); }
 
-        .loading, .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            color: #718096;
-            font-size: 1.2rem;
-        }
+        .loading, .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: #718096; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -187,18 +100,27 @@
     <div class="container">
         <header>
             <h1>صيدلية المنزل الذكية 💊</h1>
-            <p>ابحث عن الدواء المتوفر لتجنب الشراء المتكرر</p>
+            <p>ابحث عن الدواء المتوفر وتأكد من صلاحيته والكمية</p>
         </header>
 
         <div class="search-container">
             <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم الدواء، الملاحظات، أو تفاصيل أخرى...">
             <div class="filter-tags" id="filterTags">
-                <button class="tag active" onclick="filterType('الكل')">الكل</button>
+                <button class="tag active" onclick="filterType('الكل')">🔍 الكل</button>
                 <button class="tag" onclick="filterType('حبوب')">💊 حبوب</button>
                 <button class="tag" onclick="filterType('كبسول')">💊 كبسول</button>
                 <button class="tag" onclick="filterType('شراب')">🧪 شراب</button>
-                <button class="tag" onclick="filterType('عصارات')">🧴 مرهم/كريم</button>
+                <button class="tag" onclick="filterType('عصارات')">🧴 عصارات</button>
+                <button class="tag" onclick="filterType('تحميله')">🧻 تحميله</button>
+                <button class="tag" onclick="filterType('فيتامين')">🍏 فيتامين</button>
+                <button class="tag" onclick="filterType('هرمون')">🧬 هرمون</button>
+                <button class="tag" onclick="filterType('ابره')">💉 ابره</button>
+                <button class="tag" onclick="filterType('فوار')">🥤 فوار</button>
+                <button class="tag" onclick="filterType('باودر')">🧂 باودر</button>
+                <button class="tag" onclick="filterType('مغذي')">💧 مغذي</button>
+                <button class="tag" onclick="filterType('خلطه')">⚗️ خلطه</button>
                 <button class="tag" onclick="filterType('قطرات')">💧 قطرات</button>
+                <button class="tag" onclick="filterType('اخرى')">📝 اخرى</button>
             </div>
         </div>
 
@@ -212,28 +134,45 @@
         let allMedicines = [];
         let currentFilter = 'الكل';
 
-        // دالة جلب البيانات الحقيقية من Google Sheet
+        const emojiMap = {
+            "حبوب": "💊", "كبسول": "💊", "شراب": "🧪", "تحميله": "🧻", 
+            "فيتامين": "🍏", "هرمون": "🧬", "ابره": "💉", "فوار": "🥤", 
+            "باودر": "🧂", "مغذي": "💧", "خلطه": "⚗️", "اخرى": "📝"
+        };
+
         async function fetchMedicines() {
             try {
                 const response = await fetch(API_URL);
                 allMedicines = await response.json();
                 displayMedicines(allMedicines);
             } catch (error) {
-                console.error("Error fetching data:", error);
-                document.getElementById('medicinesGrid').innerHTML = '<div class="no-results">حدث خطأ أثناء جلب البيانات. تأكد من إعدادات النشر السحابي.</div>';
+                document.getElementById('medicinesGrid').innerHTML = '<div class="no-results">حدث خطأ أثناء جلب البيانات.</div>';
             }
         }
 
-        function getExpiryClass(expiryDateStr) {
-            const expiryDate = new Date(expiryDateStr);
+        function getExpiryClass(expiryValue) {
+            if (!expiryValue) return { text: "غير محدد", class: "" };
+            
+            const parts = expiryValue.split('-');
+            if(parts.length < 2) return { text: "تاريخ غير صالح", class: "" };
+            
+            const expYear = parseInt(parts[0]);
+            const expMonth = parseInt(parts[1]);
+            
             const today = new Date();
-            today.setHours(0,0,0,0);
-            const diffTime = expiryDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth() + 1;
 
-            if (diffDays <= 0) return { text: "منتهي الصلاحية ❌", class: "status-expired" };
-            if (diffDays <= 60) return { text: `ينتهي قريباً (خلال ${diffDays} يوم) ⚠️`, class: "status-warning" };
-            return { text: `صالح لغاية: ${expiryDateStr} ✅`, class: "status-valid" };
+            if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+                return { text: `منتهي الصلاحية ❌ (${expiryValue})`, class: "status-expired" };
+            }
+            
+            const monthsLeft = (expYear - currentYear) * 12 + (expMonth - currentMonth);
+            if (monthsLeft <= 2) {
+                return { text: `ينتهي قريباً ⚠️ (${expiryValue})`, class: "status-warning" };
+            }
+            
+            return { text: `صالح لغاية: ${expiryValue} ✅`, class: "status-valid" };
         }
 
         function displayMedicines(data) {
@@ -248,10 +187,17 @@
             data.forEach(med => {
                 const expiryInfo = getExpiryClass(med.expiry);
                 
-                // تحديد الصورة أو وضع رمز تعبيري افتراضي
-                let imgContent = `<span class="med-emoji">💊</span>`;
+                let emoji = "💊";
+                if(med.type.includes("عصارات")) emoji = "🧴";
+                else if(med.type.includes("قطرات")) emoji = "💧";
+                else {
+                    const key = Object.keys(emojiMap).find(k => med.type.startsWith(k));
+                    if(key) emoji = emojiMap[key];
+                }
+
+                let imgContent = `<span class="med-emoji">${emoji}</span>`;
                 if (med.img && med.img.startsWith('http')) {
-                    imgContent = `<img src="${med.img}" class="med-img" alt="${med.name}" onerror="this.src=''; this.parentNode.innerHTML='<span class=\"med-emoji\">💊</span>'">`;
+                    imgContent = `<img src="${med.img}" class="med-img" alt="${med.name}" onerror="this.src=''; this.parentNode.innerHTML='<span class=\"med-emoji\">${emoji}</span>'">`;
                 }
 
                 const card = document.createElement('div');
@@ -263,7 +209,11 @@
                         <div class="med-badge">${med.type}</div>
                         <div class="med-details">
                             <p><strong>الجرعة:</strong> ${med.dose}</p>
-                            <p><strong>الكمية:</strong> ${med.count}</p>
+                            <div class="count-section">
+                                <strong>العدد:</strong>
+                                <input type="text" class="count-input" id="count-${med.id}" value="${med.count}">
+                                <button class="btn-update-count" onclick="updateCountOnly('${med.id}')">تعديل</button>
+                            </div>
                             <p><strong>ملاحظات:</strong> ${med.notes || 'لا يوجد'}</p>
                             ${med.others ? `<p><strong>تفاصيل أخرى:</strong> ${med.others}</p>` : ''}
                         </div>
@@ -274,11 +224,47 @@
             });
         }
 
+        async function updateCountOnly(id) {
+            const newCount = document.getElementById(`count-${id}`).value;
+            const med = allMedicines.find(m => m.id.toString() === id.toString());
+            if(!med) return;
+
+            if(!confirm(`هل تريد تعديل كمية الدواء "${med.name}" إلى: ${newCount}؟`)) return;
+
+            const updatedData = {
+                action: "UPDATE",
+                id: med.id,
+                name: med.name,
+                type: med.type,
+                dose: med.dose,
+                count: newCount,
+                expiry: med.expiry,
+                img: med.img,
+                notes: med.notes,
+                others: med.others
+            };
+
+            try {
+                document.getElementById('medicinesGrid').innerHTML = '<div class="loading">جاري تحديث الكمية في السحابة... ⏳</div>';
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedData)
+                });
+                alert('تم تحديث العدد بنجاح!');
+                fetchMedicines();
+            } catch (error) {
+                alert('حدث خطأ أثناء التحديث!');
+                fetchMedicines();
+            }
+        }
+
         function filterType(type) {
             currentFilter = type;
             const tags = document.querySelectorAll('.tag');
             tags.forEach(tag => {
-                if(tag.textContent.includes(type) || (type === 'عصارات' && tag.textContent.includes('مرهم'))) tag.classList.add('active');
+                if(tag.textContent.includes(type)) tag.classList.add('active');
                 else tag.classList.remove('active');
             });
             runSearch();
@@ -290,31 +276,19 @@
             const filtered = allMedicines.filter(med => {
                 const matchesSearch = med.name.toLowerCase().includes(searchTxt) || 
                                       med.notes.toLowerCase().includes(searchTxt) || 
-                                      med.others.toLowerCase().includes(searchTxt);
+                                      (med.others && med.others.toLowerCase().includes(searchTxt));
                 
                 let matchesType = false;
-                if (currentFilter === 'الكل') {
-                    matchesType = true;
-                } else if (currentFilter === 'عصارات') {
-                    matchesType = med.type.includes('عصارات');
-                } else {
-                    matchesType = (med.type === currentFilter);
-                }
+                if (currentFilter === 'الكل') matchesType = true;
+                else matchesType = med.type.includes(currentFilter);
                 
                 return matchesSearch && matchesType;
             });
 
-            const grid = document.getElementById('medicinesGrid');
-            if(filtered.length === 0) {
-                grid.innerHTML = '<div class="no-results">لم يتم العثور على نتائج مطابقة.</div>';
-            } else {
-                displayMedicines(filtered);
-            }
+            displayMedicines(filtered);
         }
 
         document.getElementById('searchInput').addEventListener('input', runSearch);
-        
-        // بدء الجلب التلقائي عند فتح الصفحة
         fetchMedicines();
     </script>
 </body>
