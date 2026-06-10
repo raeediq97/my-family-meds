@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خزانة أدوية العائلة</title>
+    <style>
+        :root {
+            --primary-color: #2b6cb0;
+            --secondary-color: #319795;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --danger-color: #e53e3e;
+            --warning-color: #dd6b20;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .tag.active, .tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .medicines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .med-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .med-img-box {
+            width: 100%;
+            height: 180px;
+            background: #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .med-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .med-emoji {
+            font-size: 4rem;
+        }
+
+        .med-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .med-name {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .med-badge {
+            display: inline-block;
+            align-self: flex-start;
+            background: #e6fffa;
+            color: var(--secondary-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .med-details {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .med-expiry {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #edf2f7;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status-valid { color: #38a169; }
+        .status-warning { color: var(--warning-color); }
+        .status-expired { color: var(--danger-color); }
+
+        .loading, .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>صيدلية المنزل الذكية 💊</h1>
+            <p>ابحث عن الدواء المتوفر لتجنب الشراء المتكرر</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم الدواء، الملاحظات، أو تفاصيل أخرى...">
+            <div class="filter-tags" id="filterTags">
+                <button class="tag active" onclick="filterType('الكل')">الكل</button>
+                <button class="tag" onclick="filterType('حبوب')">💊 حبوب</button>
+                <button class="tag" onclick="filterType('كبسول')">💊 كبسول</button>
+                <button class="tag" onclick="filterType('شراب')">🧪 شراب</button>
+                <button class="tag" onclick="filterType('عصارات')">🧴 مرهم/كريم</button>
+                <button class="tag" onclick="filterType('قطرات')">💧 قطرات</button>
+            </div>
+        </div>
+
+        <div class="medicines-grid" id="medicinesGrid">
+            <div class="loading">جاري جلب الأدوية من المخزن السحابي... ⏳</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbz8ut1q8j4f7DIqgGDQ_ZiKcLN9AuFLcoJ-IsUNzVPj0m-LxZkYll57svnIxEHjeiP1/exec";
+        let allMedicines = [];
+        let currentFilter = 'الكل';
+
+        // دالة جلب البيانات الحقيقية من Google Sheet
+        async function fetchMedicines() {
+            try {
+                const response = await fetch(API_URL);
+                allMedicines = await response.json();
+                displayMedicines(allMedicines);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById('medicinesGrid').innerHTML = '<div class="no-results">حدث خطأ أثناء جلب البيانات. تأكد من إعدادات النشر السحابي.</div>';
+            }
+        }
+
+        function getExpiryClass(expiryDateStr) {
+            const expiryDate = new Date(expiryDateStr);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const diffTime = expiryDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays <= 0) return { text: "منتهي الصلاحية ❌", class: "status-expired" };
+            if (diffDays <= 60) return { text: `ينتهي قريباً (خلال ${diffDays} يوم) ⚠️`, class: "status-warning" };
+            return { text: `صالح لغاية: ${expiryDateStr} ✅`, class: "status-valid" };
+        }
+
+        function displayMedicines(data) {
+            const grid = document.getElementById('medicinesGrid');
+            grid.innerHTML = '';
+
+            if(data.length === 0) {
+                grid.innerHTML = '<div class="no-results">لا توجد أدوية مضافة حالياً.</div>';
+                return;
+            }
+
+            data.forEach(med => {
+                const expiryInfo = getExpiryClass(med.expiry);
+                
+                // تحديد الصورة أو وضع رمز تعبيري افتراضي
+                let imgContent = `<span class="med-emoji">💊</span>`;
+                if (med.img && med.img.startsWith('http')) {
+                    imgContent = `<img src="${med.img}" class="med-img" alt="${med.name}" onerror="this.src=''; this.parentNode.innerHTML='<span class=\"med-emoji\">💊</span>'">`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'med-card';
+                card.innerHTML = `
+                    <div class="med-img-box">${imgContent}</div>
+                    <div class="med-info">
+                        <div class="med-name">${med.name}</div>
+                        <div class="med-badge">${med.type}</div>
+                        <div class="med-details">
+                            <p><strong>الجرعة:</strong> ${med.dose}</p>
+                            <p><strong>الكمية:</strong> ${med.count}</p>
+                            <p><strong>ملاحظات:</strong> ${med.notes || 'لا يوجد'}</p>
+                            ${med.others ? `<p><strong>تفاصيل أخرى:</strong> ${med.others}</p>` : ''}
+                        </div>
+                        <div class="med-expiry ${expiryInfo.class}">${expiryInfo.text}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterType(type) {
+            currentFilter = type;
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                if(tag.textContent.includes(type) || (type === 'عصارات' && tag.textContent.includes('مرهم'))) tag.classList.add('active');
+                else tag.classList.remove('active');
+            });
+            runSearch();
+        }
+
+        function runSearch() {
+            const searchTxt = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = allMedicines.filter(med => {
+                const matchesSearch = med.name.toLowerCase().includes(searchTxt) || 
+                                      med.notes.toLowerCase().includes(searchTxt) || 
+                                      med.others.toLowerCase().includes(searchTxt);
+                
+                let matchesType = false;
+                if (currentFilter === 'الكل') {
+                    matchesType = true;
+                } else if (currentFilter === 'عصارات') {
+                    matchesType = med.type.includes('عصارات');
+                } else {
+                    matchesType = (med.type === currentFilter);
+                }
+                
+                return matchesSearch && matchesType;
+            });
+
+            const grid = document.getElementById('medicinesGrid');
+            if(filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">لم يتم العثور على نتائج مطابقة.</div>';
+            } else {
+                displayMedicines(filtered);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', runSearch);
+        
+        // بدء الجلب التلقائي عند فتح الصفحة
+        fetchMedicines();
+    </script>
+</body>
+</html>

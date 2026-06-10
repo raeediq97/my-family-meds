@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة الأدوية</title>
+    <style>
+        :root {
+            --primary-color: #2c5282;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        th {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>إضافة وإدارة مخزون الأدوية 🛠️</h1>
+        </header>
+
+        <div class="form-card">
+            <form id="medicineForm" onsubmit="addMedicine(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="medName">اسم الدواء:</label>
+                        <input type="text" id="medName" required placeholder="مثال: بندول...">
+                    </div>
+                    <div class="form-group">
+                        <label for="medType">نوع الدواء:</label>
+                        <select id="medType" required>
+                            <option value="حبوب">حبوب</option>
+                            <option value="كبسول">كبسول</option>
+                            <option value="شراب">شراب</option>
+                            <option value="عصارات (مرهم، كريم، جل)">عصارات (مرهم، كريم، جل)</option>
+                            <option value="تحميله">تحميله</option>
+                            <option value="فيتامين">فيتامين</option>
+                            <option value="هرمون">هرمون</option>
+                            <option value="ابره">ابره</option>
+                            <option value="فوار">فوار</option>
+                            <option value="باودر">باودر</option>
+                            <option value="مغذي">مغذي</option>
+                            <option value="خلطه">خلطه</option>
+                            <option value="قطرات (عيون، خشم، اذن، فم)">قطرات (عيون، خشم، اذن، فم)</option>
+                            <option value="اخرى">اخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="medDose">الجرعة:</label>
+                        <input type="text" id="medDose" required placeholder="مثال: 500 ملغم...">
+                    </div>
+                    <div class="form-group">
+                        <label for="medCount">العدد / الكمية:</label>
+                        <input type="text" id="medCount" required placeholder="مثال: 2 شريط...">
+                    </div>
+                    <div class="form-group">
+                        <label for="medExpiry">تاريخ الصلاحية:</label>
+                        <input type="date" id="medExpiry" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medImg">رابط الصورة (Google Drive - اختياري):</label>
+                        <input type="url" id="medImg" placeholder="https://drive.google.com/...">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="medNotes">ملاحظات:</label>
+                        <textarea id="medNotes" rows="2" placeholder="طريقة الاستخدام..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="medOthers">تفاصيل أخرى (نص طويل):</label>
+                        <textarea id="medOthers" rows="2"></textarea>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="btn">إضافة الدواء للمخزون ➕</button>
+            </form>
+        </div>
+
+        <h2>الأدوية المتوفرة حالياً في المخزن السحابي</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>اسم الدواء</th>
+                        <th>النوع</th>
+                        <th>الجرعة</th>
+                        <th>العدد</th>
+                        <th>تاريخ الصلاحية</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    <tr><td colspan="6" style="text-align:center;">جاري تحميل المخزن السحابي...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbz8ut1q8j4f7DIqgGDQ_ZiKcLN9AuFLcoJ-IsUNzVPj0m-LxZkYll57svnIxEHjeiP1/exec";
+        let medicines = [];
+
+        async function fetchMedicines() {
+            try {
+                const response = await fetch(API_URL);
+                medicines = await response.json();
+                renderTable();
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">فشل الاتصال بقاعدة البيانات.</td></tr>';
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+
+            if(medicines.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">المخزن فارغ حالياً.</td></tr>';
+                return;
+            }
+
+            medicines.forEach((med) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${med.name}</strong></td>
+                    <td>${med.type}</td>
+                    <td>${med.dose}</td>
+                    <td>${med.count}</td>
+                    <td>${med.expiry}</td>
+                    <td><button class="btn-delete" onclick="deleteMedicine('${med.id}')">حذف 🗑️</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function addMedicine(event) {
+            event.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = "جاري الإرسال للسحابة... ⏳";
+
+            const newMed = {
+                id: "ID-" + Date.now(),
+                name: document.getElementById('medName').value,
+                type: document.getElementById('medType').value,
+                dose: document.getElementById('medDose').value,
+                count: document.getElementById('medCount').value,
+                expiry: document.getElementById('medExpiry').value,
+                img: document.getElementById('medImg').value,
+                notes: document.getElementById('medNotes').value,
+                others: document.getElementById('medOthers').value
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors", // مخصصة لتطبيقات جوجل ويب أب
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newMed)
+                });
+                
+                alert('تم حفظ الدواء في السحابة بنجاح!');
+                document.getElementById('medicineForm').reset();
+                fetchMedicines(); // إعادة تحديث الجدول
+            } catch (error) {
+                alert('حدث خطأ أثناء الإضافة!');
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "إضافة الدواء للمخزون ➕";
+            }
+        }
+
+        async function deleteMedicine(id) {
+            if(!confirm('هل أنت متأكد من حذف هذا الدواء؟')) return;
+            
+            // تحديث واجهة المستخدم مؤقتاً
+            document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري الحذف من السحابة... ⏳</td></tr>';
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "DELETE", id: id })
+                });
+                alert('تم الحذف بنجاح!');
+                fetchMedicines();
+            } catch (error) {
+                alert('حدث خطأ أثناء الحذف!');
+                fetchMedicines();
+            }
+        }
+
+        // جلب البيانات عند الفتح لأول مرة
+        fetchMedicines();
+    </script>
+</body>
+</html>
