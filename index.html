@@ -153,7 +153,13 @@
         function getExpiryClass(expiryValue) {
             if (!expiryValue) return { text: "غير محدد", class: "" };
             
-            const parts = expiryValue.split('-');
+            // حل مشكلة النص الزائد: إذا كان التاريخ يحتوي على T أو أطول من المتوقع، نأخذ أول 7 رموز فقط (YYYY-MM)
+            let cleanExpiry = expiryValue.toString().trim();
+            if (cleanExpiry.length > 7) {
+                cleanExpiry = cleanExpiry.substring(0, 7); // تقليم النص إلى السنة والشهر فقط
+            }
+            
+            const parts = cleanExpiry.split('-');
             if(parts.length < 2) return { text: "تاريخ غير صالح", class: "" };
             
             const expYear = parseInt(parts[0]);
@@ -164,15 +170,15 @@
             const currentMonth = today.getMonth() + 1;
 
             if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
-                return { text: `منتهي الصلاحية ❌ (${expiryValue})`, class: "status-expired" };
+                return { text: `منتهي الصلاحية ❌ (${cleanExpiry})`, class: "status-expired" };
             }
             
             const monthsLeft = (expYear - currentYear) * 12 + (expMonth - currentMonth);
             if (monthsLeft <= 2) {
-                return { text: `ينتهي قريباً ⚠️ (${expiryValue})`, class: "status-warning" };
+                return { text: `ينتهي قريباً ⚠️ (${cleanExpiry})`, class: "status-warning" };
             }
             
-            return { text: `صالح لغاية: ${expiryValue} ✅`, class: "status-valid" };
+            return { text: `صالح لغاية: ${cleanExpiry} ✅`, class: "status-valid" };
         }
 
         function displayMedicines(data) {
