@@ -14,40 +14,32 @@
             --card-bg: #ffffff;
             --text-color: #2d3748;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; }
         .container { max-width: 1100px; margin: 0 auto; }
         header { margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         header h1 { color: var(--primary-color); font-size: 1.8rem; }
-
         .form-card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 20px; }
         .form-group { display: flex; flex-direction: column; gap: 8px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        
         .expiry-selects { display: flex; gap: 10px; }
         .expiry-selects select { flex: 1; }
-        
         label { font-weight: bold; font-size: 0.95rem; color: #4a5568; }
         input, select, textarea { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; outline: none; width: 100%; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-color); }
-
         .btn-container { display: flex; gap: 10px; }
         .btn { background: var(--primary-color); color: white; padding: 12px 20px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         .btn-danger { background: var(--danger-color); }
         .btn-danger:hover { background: #c53030; }
         .btn-cancel { background: #718096; }
-
         .table-container { background: var(--card-bg); border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 700px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 800px; }
         th, td { padding: 12px 15px; border-bottom: 1px solid #edf2f7; }
         th { background: #edf2f7; color: #4a5568; }
-        
         .btn-table { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; color: white; font-weight: bold; margin-left: 5px; }
         .btn-edit { background: var(--warning-color); }
         .btn-del { background: var(--danger-color); }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -66,8 +58,13 @@
                 <div class="form-grid">
                     
                     <div class="form-group">
-                        <label for="medName">اسم الدواء:</label>
-                        <input type="text" id="medName" required placeholder="مثال: بندول...">
+                        <label for="medName">الاسم التجاري:</label>
+                        <input type="text" id="medName" required placeholder="مثال: بندول، بروفين...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medScientificName">الاسم العلمي:</label>
+                        <input type="text" id="medScientificName" required placeholder="مثال: Paracetamol, Ibuprofen...">
                     </div>
 
                     <div class="form-group">
@@ -92,8 +89,7 @@
 
                     <div class="form-group hidden" id="subTypeContainer">
                         <label id="subTypeLabel" for="medSubType">التصنيف الفرعي:</label>
-                        <select id="medSubType">
-                        </select>
+                        <select id="medSubType"></select>
                     </div>
 
                     <div class="form-group hidden" id="customTypeContainer">
@@ -103,7 +99,7 @@
 
                     <div class="form-group">
                         <label for="medDose">الجرعة:</label>
-                        <input type="text" id="medDose" required placeholder="مثال: 500 ملغم، 10 مللتر...">
+                        <input type="text" id="medDose" required placeholder="مثال: 500 ملغم...">
                     </div>
 
                     <div class="form-group">
@@ -129,16 +125,13 @@
                                 <option value="11">11 - تشرين الثاني</option>
                                 <option value="12">12 - كانون الأول</option>
                             </select>
-                            
-                            <select id="medExpiryYear" required>
-                                <option value="" disabled selected>السنة</option>
-                            </select>
+                            <select id="medExpiryYear" required></select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="medImg">رابط الصورة (اختياري):</label>
-                        <input type="url" id="medImg" placeholder="https://drive.google.com/...">
+                        <input type="url" id="medImg" placeholder="https://...">
                     </div>
 
                     <div class="form-group full-width">
@@ -164,7 +157,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>اسم الدواء</th>
+                        <th>الاسم التجاري</th>
+                        <th>الاسم العلمي</th>
                         <th>النوع الكامل</th>
                         <th>الجرعة</th>
                         <th>العدد</th>
@@ -173,7 +167,7 @@
                     </tr>
                 </thead>
                 <tbody id="adminTableBody">
-                    <tr><td colspan="6" style="text-align:center;">جاري تحميل المخزن السحابي...</td></tr>
+                    <tr><td colspan="7" style="text-align:center;">جاري تحميل المخزن السحابي...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -211,21 +205,12 @@
             if (mainType === "عصارات") {
                 subContainer.classList.remove('hidden');
                 subLabel.textContent = "نوع العصارة الفرعي:";
-                subSelect.innerHTML = `
-                    <option value="مرهم">مرهم</option>
-                    <option value="جل">جل</option>
-                    <option value="كريم">كريم</option>
-                `;
+                subSelect.innerHTML = `<option value="مرهم">مرهم</option><option value="جل">جل</option><option value="كريم">كريم</option>`;
                 subSelect.setAttribute('required', 'required');
             } else if (mainType === "قطرات") {
                 subContainer.classList.remove('hidden');
                 subLabel.textContent = "نوع القطرة الفرعي:";
-                subSelect.innerHTML = `
-                    <option value="عين">عين</option>
-                    <option value="أذن">أذن</option>
-                    <option value="أنف">أنف</option>
-                    <option value="فم">فم</option>
-                `;
+                subSelect.innerHTML = `<option value="عين">عين</option><option value="أذن">أذن</option><option value="أنف">أنف</option><option value="فم">فم</option>`;
                 subSelect.setAttribute('required', 'required');
             } else if (mainType === "اخرى") {
                 customContainer.classList.remove('hidden');
@@ -239,29 +224,25 @@
                 medicines = await response.json();
                 renderTable();
             } catch (error) {
-                document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">فشل الاتصال بقاعدة البيانات.</td></tr>';
+                document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">فشل الاتصال بقاعدة البيانات.</td></tr>';
             }
         }
 
         function renderTable() {
             const tbody = document.getElementById('adminTableBody');
             tbody.innerHTML = '';
-
             if(medicines.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">المخزن فارغ حالياً.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">المخزن فارغ حالياً.</td></tr>';
                 return;
             }
-
             medicines.forEach((med) => {
-                // تقليم التاريخ وعرضه بشكل نظيف في الجدول أيضاً
                 let displayExpiry = med.expiry ? med.expiry.toString().trim() : "";
-                if (displayExpiry.length > 7) {
-                    displayExpiry = displayExpiry.substring(0, 7);
-                }
+                if (displayExpiry.length > 7) displayExpiry = displayExpiry.substring(0, 7);
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${med.name}</strong></td>
+                    <td><span style="color:#718096; font-style: italic;">${med.scientificName || 'غير محدد'}</span></td>
                     <td>${med.type}</td>
                     <td>${med.dose}</td>
                     <td>${med.count}</td>
@@ -286,13 +267,12 @@
             document.getElementById('editMedId').value = med.id;
             
             document.getElementById('medName').value = med.name;
+            document.getElementById('medScientificName').value = med.scientificName || "";
             document.getElementById('medDose').value = med.dose;
             document.getElementById('medCount').value = med.count;
             
-            // تنظيف النص قبل التفكيك والتوزيع على القوائم المنسدلة
             let cleanExp = med.expiry ? med.expiry.toString().trim() : "";
             if (cleanExp.length > 7) cleanExp = cleanExp.substring(0, 7);
-
             if(cleanExp && cleanExp.includes('-')) {
                 const parts = cleanExp.split('-');
                 document.getElementById('medExpiryYear').value = parts[0];
@@ -354,6 +334,7 @@
                 action: isEditMode ? "UPDATE" : "ADD",
                 id: isEditMode ? document.getElementById('editMedId').value : "ID-" + Date.now(),
                 name: document.getElementById('medName').value,
+                scientificName: document.getElementById('medScientificName').value,
                 type: finalType,
                 dose: document.getElementById('medDose').value,
                 count: document.getElementById('medCount').value,
@@ -370,18 +351,18 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(medData)
                 });
-                alert(isEditMode ? 'تم تحديث الدواء بنجاح!' : 'تم إضافة الدواء بنجاح!');
+                alert(isEditMode ? 'تم التحديث بنجاح!' : 'تم الإضافة بنجاح!');
                 resetForm();
                 fetchMedicines();
             } catch (error) {
-                alert('حدث خطأ أثناء الاتصال بالسحابة!');
+                alert('حدث خطأ!');
             } finally {
                 btn.disabled = false;
             }
         }
 
         async function deleteMedicine(id) {
-            if(!confirm('هل أنت متأكد من حذف هذا الدواء؟')) return;
+            if(!confirm('هل أنت متأكد من الحذف؟')) return;
             try {
                 await fetch(API_URL, {
                     method: "POST",
@@ -389,7 +370,6 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "DELETE", id: id })
                 });
-                alert('تم الحذف!');
                 fetchMedicines();
             } catch (error) {
                 fetchMedicines();
@@ -397,8 +377,7 @@
         }
 
         async function deleteExpiredMedicines() {
-            if(!confirm('🚨 هل أنت متأكد من حذف جميع الأدوية منتهية الصلاحية؟'));
-            document.getElementById('adminTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:orange;">جاري فحص وحذف المنتهي سحابياً... ⏳</td></tr>';
+            if(!confirm('🚨 حذف جميع الأدوية منتهية الصلاحية؟')) return;
             try {
                 await fetch(API_URL, {
                     method: "POST",
@@ -406,10 +385,8 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "DELETE_EXPIRED" })
                 });
-                alert('تم تنظيف المخزن وحذف كافة الأدوية منتهية الصلاحية بنجاح!');
                 fetchMedicines();
             } catch (error) {
-                alert('حدث خطأ أثناء الحذف التلقائي!');
                 fetchMedicines();
             }
         }
