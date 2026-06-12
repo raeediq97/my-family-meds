@@ -15,83 +15,35 @@
             --warning-color: #dd6b20;
             --success-color: #38a169;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 30px; }
         header h1 { color: var(--primary-color); font-size: 2rem; margin-bottom: 10px; }
         header p { color: #718096; font-size: 1rem; }
-
-        .search-container {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            outline: none;
-        }
-
+        .search-container { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .search-box { width: 100%; padding: 12px 20px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1.1rem; outline: none; }
         .search-box:focus { border-color: var(--primary-color); }
-
         .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; padding: 5px 0; }
-        .tag {
-            background: #edf2f7;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
+        .tag { background: #edf2f7; padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; border: none; transition: all 0.2s; font-weight: 500; }
         .tag.active, .tag:hover { background: var(--primary-color); color: white; }
-
-        .medicines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .med-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-        }
-
+        .medicines-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .med-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; display: flex; flex-direction: column; }
         .med-img-box { width: 100%; height: 150px; background: #edf2f7; display: flex; align-items: center; justify-content: center; }
         .med-img { width: 100%; height: 100%; object-fit: cover; }
         .med-emoji { font-size: 3.5rem; }
-
         .med-info { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
         .med-name { font-size: 1.25rem; color: var(--primary-color); font-weight: bold; }
+        .med-scientific { font-size: 0.95rem; color: #718096; font-style: italic; margin-top: -5px; }
         .med-badge { display: inline-block; align-self: flex-start; background: #e6fffa; color: var(--secondary-color); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; }
-        
         .med-details { font-size: 0.95rem; color: #4a5568; line-height: 1.5; }
         .count-section { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
         .count-input { width: 90px; padding: 4px 8px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; }
         .btn-update-count { background: var(--secondary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-
         .med-expiry { margin-top: auto; padding-top: 10px; border-top: 1px solid #edf2f7; font-size: 0.9rem; font-weight: bold; }
         .status-valid { color: var(--success-color); }
         .status-warning { color: var(--warning-color); }
         .status-expired { color: var(--danger-color); }
-
         .loading, .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: #718096; font-size: 1.2rem; }
     </style>
 </head>
@@ -100,11 +52,11 @@
     <div class="container">
         <header>
             <h1>صيدلية المنزل الذكية 💊</h1>
-            <p>ابحث عن الدواء المتوفر وتأكد من صلاحيته والكمية</p>
+            <p>ابحث عن الدواء باسمه التجاري أو العلمي وتأكد من الصلاحية</p>
         </header>
 
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم الدواء، الملاحظات، أو تفاصيل أخرى...">
+            <input type="text" id="searchInput" class="search-box" placeholder="ابحث بالاسم التجاري، العلمي، الملاحظات...">
             <div class="filter-tags" id="filterTags">
                 <button class="tag active" onclick="filterType('الكل')">🔍 الكل</button>
                 <button class="tag" onclick="filterType('حبوب')">💊 حبوب</button>
@@ -152,19 +104,14 @@
 
         function getExpiryClass(expiryValue) {
             if (!expiryValue) return { text: "غير محدد", class: "" };
-            
-            // حل مشكلة النص الزائد: إذا كان التاريخ يحتوي على T أو أطول من المتوقع، نأخذ أول 7 رموز فقط (YYYY-MM)
             let cleanExpiry = expiryValue.toString().trim();
-            if (cleanExpiry.length > 7) {
-                cleanExpiry = cleanExpiry.substring(0, 7); // تقليم النص إلى السنة والشهر فقط
-            }
+            if (cleanExpiry.length > 7) cleanExpiry = cleanExpiry.substring(0, 7);
             
             const parts = cleanExpiry.split('-');
             if(parts.length < 2) return { text: "تاريخ غير صالح", class: "" };
             
             const expYear = parseInt(parts[0]);
             const expMonth = parseInt(parts[1]);
-            
             const today = new Date();
             const currentYear = today.getFullYear();
             const currentMonth = today.getMonth() + 1;
@@ -172,19 +119,16 @@
             if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
                 return { text: `منتهي الصلاحية ❌ (${cleanExpiry})`, class: "status-expired" };
             }
-            
             const monthsLeft = (expYear - currentYear) * 12 + (expMonth - currentMonth);
             if (monthsLeft <= 2) {
                 return { text: `ينتهي قريباً ⚠️ (${cleanExpiry})`, class: "status-warning" };
             }
-            
             return { text: `صالح لغاية: ${cleanExpiry} ✅`, class: "status-valid" };
         }
 
         function displayMedicines(data) {
             const grid = document.getElementById('medicinesGrid');
             grid.innerHTML = '';
-
             if(data.length === 0) {
                 grid.innerHTML = '<div class="no-results">لا توجد أدوية مضافة حالياً.</div>';
                 return;
@@ -192,7 +136,6 @@
 
             data.forEach(med => {
                 const expiryInfo = getExpiryClass(med.expiry);
-                
                 let emoji = "💊";
                 if(med.type.includes("عصارات")) emoji = "🧴";
                 else if(med.type.includes("قطرات")) emoji = "💧";
@@ -212,6 +155,7 @@
                     <div class="med-img-box">${imgContent}</div>
                     <div class="med-info">
                         <div class="med-name">${med.name}</div>
+                        <div class="med-scientific">${med.scientificName ? 'الاسم العلمي: ' + med.scientificName : 'الاسم العلمي: غير محدد'}</div>
                         <div class="med-badge">${med.type}</div>
                         <div class="med-details">
                             <p><strong>الجرعة:</strong> ${med.dose}</p>
@@ -235,12 +179,13 @@
             const med = allMedicines.find(m => m.id.toString() === id.toString());
             if(!med) return;
 
-            if(!confirm(`هل تريد تعديل كمية الدواء "${med.name}" إلى: ${newCount}؟`)) return;
+            if(!confirm(`هل تريد تعديل كمية الدواء "${med.name}"؟`)) return;
 
             const updatedData = {
                 action: "UPDATE",
                 id: med.id,
                 name: med.name,
+                scientificName: med.scientificName || "",
                 type: med.type,
                 dose: med.dose,
                 count: newCount,
@@ -251,7 +196,7 @@
             };
 
             try {
-                document.getElementById('medicinesGrid').innerHTML = '<div class="loading">جاري تحديث الكمية في السحابة... ⏳</div>';
+                document.getElementById('medicinesGrid').innerHTML = '<div class="loading">جاري تحديث الكمية... ⏳</div>';
                 await fetch(API_URL, {
                     method: "POST",
                     mode: "no-cors",
@@ -261,7 +206,7 @@
                 alert('تم تحديث العدد بنجاح!');
                 fetchMedicines();
             } catch (error) {
-                alert('حدث خطأ أثناء التحديث!');
+                alert('حدث خطأ!');
                 fetchMedicines();
             }
         }
@@ -278,9 +223,10 @@
 
         function runSearch() {
             const searchTxt = document.getElementById('searchInput').value.toLowerCase();
-            
             const filtered = allMedicines.filter(med => {
+                // شمول حقل الاسم العلمي الجديد في محرك البحث
                 const matchesSearch = med.name.toLowerCase().includes(searchTxt) || 
+                                      (med.scientificName && med.scientificName.toLowerCase().includes(searchTxt)) ||
                                       med.notes.toLowerCase().includes(searchTxt) || 
                                       (med.others && med.others.toLowerCase().includes(searchTxt));
                 
@@ -290,7 +236,6 @@
                 
                 return matchesSearch && matchesType;
             });
-
             displayMedicines(filtered);
         }
 
